@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "asset.schema.json",
+  "title": "Asset",
+  "description": "What one asset id resolves to: a model, a material, a texture or a sound. Engine-neutral: engines decide how to load it.",
+  "$defs": {
+    "AssetKind": {
+      "type": "string",
+      "enum": ["model", "material", "texture", "audio"]
+    },
+    "Source": {
+      "description": "The file an asset is made from.",
+      "type": "object",
+      "properties": {
+        "uri": {
+          "type": "string",
+          "description": "Path relative to the library file, or an absolute http(s) URL."
+        },
+        "format": {
+          "type": "string",
+          "enum": ["glb", "gltf", "png", "jpg", "wav", "ogg", "mp3"]
+        }
+      },
+      "required": ["uri", "format"],
+      "additionalProperties": false
+    },
+    "Material": {
+      "description": "A physically based (metallic/roughness) surface, the same model as glTF's.",
+      "type": "object",
+      "properties": {
+        "baseColor": { "$ref": "common.schema.json#/$defs/Color" },
+        "baseColorTexture": {
+          "$ref": "common.schema.json#/$defs/AssetId",
+          "description": "Id of a texture asset, multiplied with baseColor."
+        },
+        "metallic": { "type": "number", "minimum": 0, "maximum": 1 },
+        "roughness": { "type": "number", "minimum": 0, "maximum": 1 },
+        "emission": { "$ref": "common.schema.json#/$defs/Color" },
+        "transparent": { "type": "boolean", "description": "Blend with what is behind, using baseColor alpha." }
+      },
+      "additionalProperties": false
+    },
+    "Placeholder": {
+      "description": "Shown while the asset loads, or instead of it when it cannot be loaded. Sized to the asset's bounds.",
+      "type": "object",
+      "properties": {
+        "shape": { "type": "string", "enum": ["box", "sphere", "capsule"] },
+        "color": { "$ref": "common.schema.json#/$defs/Color" }
+      },
+      "required": ["shape"],
+      "additionalProperties": false
+    },
+    "Asset": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "common.schema.json#/$defs/AssetId" },
+        "name": { "type": "string" },
+        "kind": { "$ref": "#/$defs/AssetKind" },
+        "source": {
+          "$ref": "#/$defs/Source",
+          "description": "The file: glb/gltf for models, png/jpg for textures, wav/ogg/mp3 for audio."
+        },
+        "material": {
+          "$ref": "#/$defs/Material",
+          "description": "Set for kind \"material\"."
+        },
+        "materials": {
+          "type": "array",
+          "items": { "$ref": "common.schema.json#/$defs/AssetId" },
+          "description": "Model only: material assets that replace the model's own materials, in order."
+        },
+        "bounds": {
+          "$ref": "common.schema.json#/$defs/Bounds3D",
+          "description": "Model only: the space it takes, for placeholders and placement before it loads."
+        },
+        "placeholder": { "$ref": "#/$defs/Placeholder" },
+        "metadata": { "$ref": "common.schema.json#/$defs/Metadata" }
+      },
+      "required": ["id", "kind"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "material" } } },
+          "then": { "required": ["material"] }
+        },
+        {
+          "if": { "properties": { "kind": { "enum": ["texture", "audio"] } } },
+          "then": { "required": ["source"] }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "model" } } },
+          "then": { "anyOf": [{ "required": ["source"] }, { "required": ["placeholder"] }] }
+        }
+      ]
+    }
+  }
+}

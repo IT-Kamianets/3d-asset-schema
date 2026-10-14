@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "libraryId": "example-props",
+  "units": "meters",
+  "assets": [
+    {
+      "id": "props/crate-wood",
+      "name": "Wooden crate",
+      "kind": "model",
+      "source": { "uri": "files/crate.glb", "format": "glb" },
+      "materials": ["materials/wood"],
+      "bounds": {
+        "min": { "x": -0.5, "y": 0, "z": -0.5 },
+        "max": { "x": 0.5, "y": 1, "z": 0.5 }
+      },
+      "placeholder": { "shape": "box", "color": { "r": 0.55, "g": 0.36, "b": 0.2 } },
+      "metadata": { "tags": ["prop", "cover"] }
+    },
+    {
+      "id": "props/barrel",
+      "name": "Barrel (not modeled yet)",
+      "kind": "model",
+      "bounds": {
+        "min": { "x": -0.35, "y": 0, "z": -0.35 },
+        "max": { "x": 0.35, "y": 1.1, "z": 0.35 }
+      },
+      "placeholder": { "shape": "capsule", "color": { "r": 0.3, "g": 0.3, "b": 0.35 } },
+      "metadata": { "tags": ["prop"] }
+    },
+    {
+      "id": "materials/wood",
+      "name": "Wood",
+      "kind": "material",
+      "material": {
+        "baseColor": { "r": 1, "g": 1, "b": 1 },
+        "baseColorTexture": "textures/wood",
+        "metallic": 0,
+        "roughness": 0.8
+      }
+    },
+    {
+      "id": "textures/wood",
+      "kind": "texture",
+      "source": { "uri": "files/wood.png", "format": "png" }
+    },
+    {
+      "id": "sounds/footstep-stone-1",
+      "kind": "audio",
+      "source": { "uri": "files/footstep.wav", "format": "wav" },
+      "metadata": { "tags": ["footstep", "surface:stone"] }
+    }
+  ]
+}

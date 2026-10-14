@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "asset-library.schema.json",
+  "title": "Asset library (v1)",
+  "description": "Root document: a set of asset definitions shipped together, e.g. everything one level needs. A project can load several libraries; ids must be unique across them.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "enum": ["1.0.0"]
+    },
+    "libraryId": { "type": "string" },
+    "units": {
+      "type": "string",
+      "const": "meters"
+    },
+    "assets": {
+      "type": "array",
+      "items": { "$ref": "asset.schema.json#/$defs/Asset" }
+    },
+    "metadata": { "$ref": "common.schema.json#/$defs/Metadata" }
+  },
+  "required": ["schemaVersion", "libraryId", "units", "assets"],
+  "additionalProperties": false
+}

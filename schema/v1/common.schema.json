@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.schema.json",
+  "title": "Common definitions",
+  "description": "Shared primitive types of the asset schema. Vector3, Bounds3D and Metadata match 3d-scene-schema's, so tools can share code.",
+  "$defs": {
+    "Vector3": {
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      },
+      "required": ["x", "y", "z"],
+      "additionalProperties": false
+    },
+    "Bounds3D": {
+      "description": "Axis-aligned bounding box in the asset's own space, meters.",
+      "type": "object",
+      "properties": {
+        "min": { "$ref": "#/$defs/Vector3" },
+        "max": { "$ref": "#/$defs/Vector3" }
+      },
+      "required": ["min", "max"],
+      "additionalProperties": false
+    },
+    "Color": {
+      "description": "sRGB color, each channel 0..1. Alpha defaults to 1.",
+      "type": "object",
+      "properties": {
+        "r": { "type": "number", "minimum": 0, "maximum": 1 },
+        "g": { "type": "number", "minimum": 0, "maximum": 1 },
+        "b": { "type": "number", "minimum": 0, "maximum": 1 },
+        "a": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "required": ["r", "g", "b"],
+      "additionalProperties": false
+    },
+    "AssetId": {
+      "description": "Stable id of an asset, unique in a project: lowercase, path-like, e.g. \"props/crate-wood\".",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)*$"
+    },
+    "Metadata": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
